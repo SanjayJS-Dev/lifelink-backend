@@ -18,7 +18,7 @@ app.get('/localities', async (req, res) => {
 
 app.post('/addVolunteer', async (req, res) => {
   //let { name, gender, dob, bgrp, locality, mobile, address, password } = req.body
-  res.status(200).json(req.body)
+  res.status(200).send("Success")
   /*try {
     let checkVolunteer = await Volunteer.findOne({ mobile: mobile })
     if (checkVolunteer) {
