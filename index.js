@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 const Locality = require('./models/Localities')
 const Volunteer = require('./models/Volunteers')
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT
 
 app.use(express.json())
 
