@@ -17,9 +17,9 @@ app.get('/localities', async (req, res) => {
 })
 
 app.post('/addVolunteer', async (req, res) => {
-  //let { name, gender, dob, bgrp, locality, mobile, address, password } = req.body
+  let { name, gender, dob, bgrp, locality, mobile, address, password } = req.body
   res.status(200).send("Success")
-  /*try {
+  try {
     let checkVolunteer = await Volunteer.findOne({ mobile: mobile })
     if (checkVolunteer) {
       res.status(409).json({ message: "Mobile Number already Registered" })
@@ -49,7 +49,7 @@ app.post('/addVolunteer', async (req, res) => {
       .catch((error) => res.json({ message: error.message }))
   } catch (error) {
     res.status(500).json({message:error.message})
-  }*/
+  }
 })
 
 app.listen(port)
