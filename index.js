@@ -11,6 +11,10 @@ const port = process.env.PORT
 app.use(express.json())
 app.use(cors())
 
+app.get('/addVolunteer', (req,res)=> {
+  res.write("Hello")
+})
+
 app.get('/localities', async (req, res) => {
   const Localities = await Locality.find({})
   res.status(200).json(Localities)
