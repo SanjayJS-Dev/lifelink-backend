@@ -6,13 +6,13 @@ const cors = require('cors')
 const Locality = require('./models/Localities')
 const Volunteer = require('./models/Volunteers')
 const app = express()
-const port = process.env.PORT
+const port = process.env.PORT || 3000
 
 app.use(express.json())
 app.use(cors())
 
-app.get('/addVolunteer', (req,res)=> {
-  res.write("Hello")
+app.get('/check', (req,res)=>{
+  res.status(200).send("Yes")
 })
 
 app.get('/localities', async (req, res) => {
