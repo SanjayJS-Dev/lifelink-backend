@@ -2,16 +2,14 @@ require('dotenv').config()
 require('./database/conn')
 const express = require('express')
 const bcrypt = require('bcrypt')
+const cors = require('cors')
 const Locality = require('./models/Localities')
 const Volunteer = require('./models/Volunteers')
 const app = express()
 const port = process.env.PORT
 
 app.use(express.json())
-
-app.get('/',(req,res)=>{
-  res.write(process.env.MONGODB_CONN)
-})
+app.use(cors())
 
 app.get('/localities', async (req, res) => {
   const Localities = await Locality.find({})
