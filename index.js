@@ -20,6 +20,10 @@ app.get('/localities', async (req, res) => {
   res.status(200).json(Localities)
 })
 
+app.get('/addVolunteer', (req,res)=> {
+  res.write("Hello")
+})
+
 app.post('/addVolunteer', async (req,res) => {
   let {name,gender,dob,bgrp,locality,mobile,address,password} = req.body
   let checkVolunteer = await Volunteer.findOne({mobile:mobile})
