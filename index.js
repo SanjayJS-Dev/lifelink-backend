@@ -11,16 +11,12 @@ const port = process.env.PORT || 3000
 app.use(express.json())
 app.use(cors())
 
-app.post('/check', (req,res)=>{
-  res.status(200).send("Yes")
-})
-
 app.get('/localities', async (req, res) => {
   const Localities = await Locality.find({})
   res.status(200).json(Localities)
 })
 
-app.post('/addVolunteer', async (req,res) => {
+app.post('/addv', async (req,res) => {
   let {name,gender,dob,bgrp,locality,mobile,address,password} = req.body
   let checkVolunteer = await Volunteer.findOne({mobile:mobile})
   if (checkVolunteer) {
