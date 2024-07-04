@@ -9,7 +9,7 @@ const port = process.env.PORT
 
 app.use(express.json())
 
-app.get('/',()=>{
+app.get('/',(req,res)=>{
   res.write(process.env.MONGODB_CONN)
 })
 
