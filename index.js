@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000
 app.use(express.json())
 app.use(cors())
 
-app.get('/check', (req,res)=>{
+app.post('/check', (req,res)=>{
   res.status(200).send("Yes")
 })
 
