@@ -18,15 +18,9 @@ app.get('/localities', async (req, res) => {
 
 app.post('/addVolunteer', async (req, res) => {
   let { name, gender, dob, bgrp, locality, mobile, address, password } = req.body
-  try {
-    let checkVolunteer = await Volunteer.findOne({ mobile: mobile })
-    if (checkVolunteer) {
-      res.status(409).json({ message: "Mobile Number already Registered" })
-      return
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message })
-    return
+  let checkVolunteer = await Volunteer.findOne({ mobile: mobile })
+  if (checkVolunteer) {
+    res.status(409).json({ message: "Mobile Number already Registered" })
   }
   const salt = bcrypt.genSaltSync(10)
   const hash = bcrypt.hashSync(password, salt)
@@ -42,13 +36,14 @@ app.post('/addVolunteer', async (req, res) => {
     verfied: false,
     last: new Date()
   })
-  try {
-    await volunteer.save()
-      .then(() => res.status(200).json({ message: "Volunteer Registration Successfull" }))
-      .catch((error) => res.json({ message: error.message }))
-  } catch (error) {
-    res.status(500).json({message:error.message})
-  }
+  await volunteer.save()
+    .then(() => res.status(200).json({ message: "Volunteer Registration Successfull" }))
+    .catch((error) => res.json({ message: error.message }))
+})
+
+app.get('/isVolunteer', async (req, res) => {
+  let { mobile, password } = req.body
+
 })
 
 app.listen(port)
