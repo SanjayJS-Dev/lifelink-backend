@@ -42,7 +42,7 @@ app.post('/addVolunteer', async (req, res) => {
     .catch((error) => res.json({ message: error.message }))
 })
 
-app.get('/isVolunteer', async (req, res) => {
+app.post('/isVolunteer', async (req, res) => {
   let { mobile, password } = req.body
   let checkVolunteer = await Volunteer.findOne({mobile:mobile})
   if(checkVolunteer) {
