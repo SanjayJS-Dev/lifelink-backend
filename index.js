@@ -21,7 +21,6 @@ app.post('/addVolunteer', async (req, res) => {
   let checkVolunteer = await Volunteer.findOne({ mobile: mobile })
   if (checkVolunteer) {
     res.status(409).json({ message: "Mobile Number already Registered" })
-    return
   }
   const salt = bcrypt.genSaltSync(10)
   const hash = bcrypt.hashSync(password, salt)
