@@ -44,7 +44,16 @@ app.post('/addVolunteer', async (req, res) => {
 
 app.get('/isVolunteer', async (req, res) => {
   let { mobile, password } = req.body
-
+  let checkVolunteer = await Volunteer.findOne({mobile:mobile})
+  if(checkVolunteer) {
+    if(bcrypt.compareSync(password,checkVolunteer.password)) {
+        res.status(200)
+    } else {
+        res.status(401).json({message:"Incorrect Password"})
+    }
+  } else {
+    res.status(200).json({message:"Invalid Mobile Number"})
+  }
 })
 
 app.listen(port)
