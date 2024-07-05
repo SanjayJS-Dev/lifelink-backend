@@ -44,10 +44,10 @@ app.post('/addVolunteer', async (req, res) => {
 
 app.post('/isVolunteer', async (req, res) => {
   let { mobile, password } = req.body
-  let checkVolunteer = await Volunteer.findOne({mobile:mobile})
-  if(checkVolunteer) {
-    if(bcrypt.compareSync(password,checkVolunteer.password)) {
-        res.sendStatus(200)
+  let volunteer = await Volunteer.findOne({mobile:mobile})
+  if(volunteer) {
+    if(bcrypt.compareSync(password,volunteer.password)) {
+        res.status(200).json(volunteer)
     } else {
         res.status(401).json({message:"Incorrect Password"})
     }
