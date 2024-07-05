@@ -48,11 +48,12 @@ app.post('/isVolunteer', async (req, res) => {
   if(checkVolunteer) {
     if(bcrypt.compareSync(password,checkVolunteer.password)) {
         res.status(200)
+        return
     } else {
         res.status(401).json({message:"Incorrect Password"})
     }
   } else {
-    res.status(200).json({message:"Invalid Mobile Number"})
+    res.status(401).json({message:"Invalid Mobile Number"})
   }
 })
 
