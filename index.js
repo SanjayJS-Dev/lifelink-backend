@@ -81,7 +81,7 @@ app.post('/validateLogin', async (req,res) => {
   let institution = await Institution.findOne({email:email})
   if(institution) {
     if(bcrypt.compareSync(password,institution.password)) {
-      let token = jwt.sign(institution,process.env.JWT_KEY)
+      let token = jwt.sign(institution.toJSON(),process.env.JWT_KEY)
       res.status(200).json(token)
     } else {
       res.status(401).json({message:"Incorrect Password"})
