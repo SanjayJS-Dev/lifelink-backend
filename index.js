@@ -3,6 +3,7 @@ require('./database/conn')
 const express = require('express')
 const bcrypt = require('bcrypt')
 const cors = require('cors')
+const jwt = require('jsonwebtoken')
 const Locality = require('./models/Localities')
 const Volunteer = require('./models/Volunteers')
 const Institution = require('./models/Institution')
@@ -80,7 +81,8 @@ app.post('/validateLogin', async (req,res) => {
   let institution = await Institution.findOne({email:email})
   if(institution) {
     if(bcrypt.compareSync(password,institution.password)) {
-      res.status(200).json(institution)
+      let token = jwt.sign(institution,process.env.JWT_KEY)
+      res.status(200).json(token)
     } else {
       res.status(401).json({message:"Incorrect Password"})
     }
