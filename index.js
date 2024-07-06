@@ -47,7 +47,12 @@ app.post('/addInstitution', async (req, res) => {
   let { name, locality, phone, address, email, password } = req.body
   let checkInstitution = await Institution.findOne({ phone: phone })
   if (checkInstitution) {
-    res.status(409).json({ message: "Mobile Number or Email ID already Registered" })
+    res.status(409).json({ message: "Mobile Number already Registered" })
+    return
+  }
+  checkInstitution = await Institution.findOne({ email:email })
+  if(checkInstitution) {
+    res.status(409).json({ message: "Email ID already Registered" })
     return
   }
   const salt = bcrypt.genSaltSync(10)
@@ -68,6 +73,20 @@ app.post('/addInstitution', async (req, res) => {
   await institution.save()
     .then(() => res.status(200).json({ message: "Institution Registration Successfull" }))
     .catch((error) => res.json({ message: error.message }))
+})
+
+app.post('/validateLogin', async (req,res) => {
+  let { email,password } = req.body
+  let institution = await Institution.findOne({email:email})
+  if(institution) {
+    if(bcrypt.compareSync(password,institution.password)) {
+      res.status(200).json(institution)
+    } else {
+      res.status(401).json({message:"Incorrect Password"})
+    }
+  } else {
+    res.status(401).json({message:"Invalid Email ID"})
+  }
 })
 
 app.post('/isVolunteer', async (req, res) => {
