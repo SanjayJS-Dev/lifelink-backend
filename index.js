@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt')
 const cors = require('cors')
 const Locality = require('./models/Localities')
 const Volunteer = require('./models/Volunteers')
+const Institution = require('./models/Institution')
 const app = express()
 const port = process.env.PORT || 3000
 
@@ -39,6 +40,33 @@ app.post('/addVolunteer', async (req, res) => {
   })
   await volunteer.save()
     .then(() => res.status(200).json({ message: "Volunteer Registration Successfull" }))
+    .catch((error) => res.json({ message: error.message }))
+})
+
+app.post('/addInstitution', async (req, res) => {
+  let { name, locality, phone, address, email, password } = req.body
+  let checkInstitution = await Institution.find({ phone: phone, email:email })
+  if (checkInstitution) {
+    res.status(409).json({ message: "Mobile Number or Email ID already Registered" })
+    return
+  }
+  const salt = bcrypt.genSaltSync(10)
+  const hash = bcrypt.hashSync(password, salt)
+  const institution = new Institution({
+    name: name,
+    locality: locality,
+    phone: phone,
+    address: address,
+    email: email,
+    password: hash,
+    verfied: false,
+    location: {
+      latitude:"0",
+      longitude:"0"
+    }
+  })
+  await institution.save()
+    .then(() => res.status(200).json({ message: "Institution Registration Successfull" }))
     .catch((error) => res.json({ message: error.message }))
 })
 
