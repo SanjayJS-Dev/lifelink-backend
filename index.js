@@ -13,6 +13,23 @@ const port = process.env.PORT || 3000
 app.use(express.json())
 app.use(cors())
 
+//authentication using jwt
+const verifyToken = (req,res,next) => {
+  let authHeader = req.headers.authorization
+  if(authHeader == undefined) {
+    res.status(401).json({message:"No Token. Authentication Failed"})
+  } else {
+    let token = authHeader.split(" ")[1]
+    jwt.verify(token,process.env.JWT_KEY,(err,decoded)=>{
+      if(err) {
+        res.status(401).json({message:"Invalid Token. Authentication Failed"})
+      } else {
+        next();
+      }
+    })
+  }
+}
+
 app.get('/localities', async (req, res) => {
   const Localities = await Locality.find({})
   res.status(200).json(Localities)
@@ -81,8 +98,12 @@ app.post('/validateLogin', async (req,res) => {
   let institution = await Institution.findOne({email:email})
   if(institution) {
     if(bcrypt.compareSync(password,institution.password)) {
-      let token = jwt.sign(institution,process.env.JWT_KEY)
-      res.status(200).json(token)
+      if(institution.verfied){
+        let token = jwt.sign(institution.toJSON(),process.env.JWT_KEY)
+        res.status(200).json(token)
+      } else {
+        res.status(401).json({message:"Registration not Verified"})
+      }
     } else {
       res.status(401).json({message:"Incorrect Password"})
     }
