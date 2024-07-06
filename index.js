@@ -45,7 +45,7 @@ app.post('/addVolunteer', async (req, res) => {
 
 app.post('/addInstitution', async (req, res) => {
   let { name, locality, phone, address, email, password } = req.body
-  let checkInstitution = await Institution.find({ phone: phone, email:email })
+  let checkInstitution = await Institution.findOne({ phone: phone })
   if (checkInstitution) {
     res.status(409).json({ message: "Mobile Number or Email ID already Registered" })
     return
