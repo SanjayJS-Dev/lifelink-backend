@@ -13,7 +13,7 @@ const port = process.env.PORT || 3000
 app.use(express.json())
 app.use(cors())
 
-//authentication using jwt
+//middleware for authentication using jwt
 const verifyToken = (req, res, next) => {
     let authHeader = req.headers.authorization
     if (authHeader == undefined) {
@@ -140,6 +140,21 @@ app.post('/isVolunteer', async (req, res) => {
         }
     } else {
         res.status(401).json({ message: "Invalid Mobile Number" })
+    }
+})
+
+//to institutions to verify volunteers
+app.post('/getVolunteers', verifyToken, async (req, res) => {
+    let locality = req.body.locality
+    try {
+        let volunteers = await Volunteer.find({ locality: locality, verfied: false})
+        if (volunteers.length > 0) {
+            res.status(200).json(volunteers)
+        } else {
+            res.sendStatus(204)
+        }
+    } catch (error) {
+        res.status(502).json({message:error.message})
     }
 })
 
