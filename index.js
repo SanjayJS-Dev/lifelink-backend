@@ -7,11 +7,20 @@ const jwt = require('jsonwebtoken')
 const Locality = require('./models/Localities')
 const Volunteer = require('./models/Volunteers')
 const Institution = require('./models/Institution')
-const app = express()
+const http = require('http')
+const socket = require('socket.io')
 const port = process.env.PORT || 3000
+
+const app = express()
+const server = http.createServer(app)
+const socketServer = socket(server)
 
 app.use(express.json())
 app.use(cors())
+
+socketServer.on('connection', (socket)=>{
+    
+})
 
 //middleware for authentication using jwt
 const verifyToken = (req, res, next) => {
@@ -186,4 +195,4 @@ app.delete('/rejectVolunteer', verifyToken, async (req, res) => {
     }
 })
 
-app.listen(port)
+server.listen(port)
