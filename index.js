@@ -204,7 +204,7 @@ app.post('/getDonorList', verifyToken, async (req, res) => {
     let bgrp = req.body.bgrp
     try {
         let volunteers = await Volunteer.find({ bgrp: bgrp })
-        if(volunteers) {
+        if(volunteers.length > 0) {
             res.send(200).json(volunteers)
         } else {
             res.sendStatus(204)
