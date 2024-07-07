@@ -158,4 +158,18 @@ app.post('/getVolunteers', verifyToken, async (req, res) => {
     }
 })
 
+app.patch('/acceptVolunteer', verifyToken, async(req,res)=>{
+    let mobile = req.body.mobile
+    try {
+        let volunteer = await Volunteer.findOneAndUpdate({mobile:mobile},{verfied:true})
+        if(volunteer) {
+            res.sendStatus(200)
+        } else {
+            res.sendStatus(404)
+        }
+    } catch (error) {
+        res.status(500).json({error:error.message})
+    }
+})
+
 app.listen(port)
