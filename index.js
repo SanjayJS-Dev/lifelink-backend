@@ -144,10 +144,10 @@ app.post('/isVolunteer', async (req, res) => {
     let volunteer = await Volunteer.findOne({ mobile: mobile })
     if (volunteer) {
         if (bcrypt.compareSync(password, volunteer.password)) {
-            if(volunteer.verfied) {
+            if (volunteer.verfied) {
                 res.status(200).json(volunteer)
             } else {
-                res.status(401).json({message:"Registration not Verified"})
+                res.status(401).json({ message: "Registration not Verified" })
             }
         } else {
             res.status(401).json({ message: "Incorrect Password" })
@@ -200,6 +200,20 @@ app.delete('/rejectVolunteer', verifyToken, async (req, res) => {
     }
 })
 
+app.post('/getDonorList', verifyToken, async (req, res) => {
+    let bgrp = req.body.bgrp
+    try {
+        let volunteers = await Volunteer.find({ bgrp: bgrp })
+        if(volunteers) {
+            res.send(200).json(volunteers)
+        } else {
+            res.sendStatus(204)
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+})
+
 app.post("/getDonors", (req, res) => {
     let bgrp = req.body.bgrp
     socketServer.emit("request", bgrp)
@@ -226,12 +240,12 @@ app.post("/storeLocation", async (req, res) => {
         })
     } else {
         await location.save()
-        .then(()=>{
-            res.sendStatus(200)
-        })
-        .catch((error)=>{
-            res.status(500).json({message:error.message})
-        })
+            .then(() => {
+                res.sendStatus(200)
+            })
+            .catch((error) => {
+                res.status(500).json({ message: error.message })
+            })
     }
 })
 
