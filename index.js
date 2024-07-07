@@ -144,7 +144,11 @@ app.post('/isVolunteer', async (req, res) => {
     let volunteer = await Volunteer.findOne({ mobile: mobile })
     if (volunteer) {
         if (bcrypt.compareSync(password, volunteer.password)) {
-            res.status(200).json(volunteer)
+            if(volunteer.verfied) {
+                res.status(200).json(volunteer)
+            } else {
+                res.status(401).json({message:"Registration not Verified"})
+            }
         } else {
             res.status(401).json({ message: "Incorrect Password" })
         }
