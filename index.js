@@ -9,6 +9,7 @@ const Volunteer = require('./models/Volunteers')
 const Institution = require('./models/Institution')
 const http = require('http')
 const socket = require('socket.io')
+const Location = require('./models/Location')
 const port = process.env.PORT || 3000
 
 const app = express()
@@ -18,8 +19,8 @@ const socketServer = socket(server)
 app.use(express.json())
 app.use(cors())
 
-socketServer.on('connection', (socket)=>{
-    
+socketServer.on('connection', (socket) => {
+
 })
 
 //middleware for authentication using jwt
@@ -195,10 +196,39 @@ app.delete('/rejectVolunteer', verifyToken, async (req, res) => {
     }
 })
 
-app.get("/getDonors",(req,res)=>{
+app.get("/getDonors", (req, res) => {
     let bgrp = req.body.bgrp
-    socketServer.emit("request",bgrp)
+    socketServer.emit("request", bgrp)
     res.sendStatus(200)
+})
+
+//to store volunteer location
+app.post("/storeLocation", async (req, res) => {
+    let { mob, latitude, longitude } = req.body
+    const location = new Location({
+        mobile: mob,
+        location: {
+            latitude: latitude,
+            longitude: longitude
+        }
+    })
+    let checkLocation = await Location.findOne({ mobile: mob })
+    if (checkLocation) {
+        await Location.updateOne({ mobile: mob }, {
+            location: {
+                latitude: latitude,
+                longitude: longitude
+            }
+        })
+    } else {
+        await location.save()
+        .then(()=>{
+            res.sendStatus(200)
+        })
+        .catch((error)=>{
+            res.status(500).json({message:error.message})
+        })
+    }
 })
 
 server.listen(port)
