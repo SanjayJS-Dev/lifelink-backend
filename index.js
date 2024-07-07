@@ -196,7 +196,8 @@ app.delete('/rejectVolunteer', verifyToken, async (req, res) => {
 })
 
 app.get("/getDonors",(req,res)=>{
-    socketServer.emit("requested","REQUEST_SUCCESS")
+    let bgrp = req.body.bgrp
+    socketServer.emit("request",bgrp)
     res.sendStatus(200)
 })
 
