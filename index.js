@@ -147,28 +147,42 @@ app.post('/isVolunteer', async (req, res) => {
 app.post('/getVolunteers', verifyToken, async (req, res) => {
     let locality = req.body.locality
     try {
-        let volunteers = await Volunteer.find({ locality: locality, verfied: false})
+        let volunteers = await Volunteer.find({ locality: locality, verfied: false })
         if (volunteers.length > 0) {
             res.status(200).json(volunteers)
         } else {
             res.sendStatus(204)
         }
     } catch (error) {
-        res.status(502).json({message:error.message})
+        res.status(502).json({ message: error.message })
     }
 })
 
-app.patch('/acceptVolunteer', verifyToken, async(req,res)=>{
+app.patch('/acceptVolunteer', verifyToken, async (req, res) => {
     let mobile = req.body.mobile
     try {
-        let volunteer = await Volunteer.findOneAndUpdate({mobile:mobile},{verfied:true})
-        if(volunteer) {
+        let volunteer = await Volunteer.findOneAndUpdate({ mobile: mobile }, { verfied: true })
+        if (volunteer) {
             res.sendStatus(200)
         } else {
             res.sendStatus(404)
         }
     } catch (error) {
-        res.status(500).json({error:error.message})
+        res.status(500).json({ error: error.message })
+    }
+})
+
+app.delete('/rejectVolunteer', verifyToken, async (req, res) => {
+    let mobile = req.body.mobile
+    try {
+        let volunteer = await Volunteer.deleteOne({ mobile: mobile })
+        if (volunteer.deletedCount == 0) {
+            res.sendStatus(404)
+        } else {
+            res.sendStatus(200)
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message })
     }
 })
 
