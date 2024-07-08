@@ -16,15 +16,15 @@ const app = express()
 app.use(express.json())
 app.use(cors({
     origin: process.env.FRONT_END_SERVER,
-    methods: ['GET','POST','PATCH','DELETE'],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     credentials: true
 }))
 
 const server = http.createServer(app)
-const socketServer = socket(server,{
+const socketServer = socket(server, {
     cors: {
         origin: process.env.FRONT_END_SERVER,
-        methods: ['GET','POST','PATCH','DELETE'],
+        methods: ['GET', 'POST', 'PATCH', 'DELETE'],
         credentials: true
     }
 })
@@ -32,11 +32,11 @@ const socketServer = socket(server,{
 socketServer.on('connection', (socket) => {
 
     socket.on("request", (data) => {
-        socket.broadcast.emit("checkBgrp",data)
+        socket.broadcast.emit("checkBgrp", data)
     })
 
     socket.on("location", (data) => {
-        socket.broadcast.emit("receivedLocation",data)
+        socket.broadcast.emit("receivedLocation", data)
     })
 
 })
@@ -218,52 +218,17 @@ app.delete('/rejectVolunteer', verifyToken, async (req, res) => {
     }
 })
 
-app.post('/getDonorList', verifyToken, async (req, res) => {
-    let bgrp = req.body.bgrp
+app.post("/getDonorData", verifyToken, async (req, res) => {
+    let mobile = req.body.mobile
     try {
-        let volunteers = await Volunteer.find({ bgrp: bgrp })
-        if (volunteers.length > 0) {
-            res.send(200).json(volunteers)
+        let volunteer = await Volunteer.findOne({mobile:mobile})
+        if(volunteer) {
+            res.status(200).json(volunteer)
         } else {
             res.sendStatus(204)
         }
     } catch (error) {
-        res.status(500).json({ message: error.message })
-    }
-})
-
-app.post("/getDonors", (req, res) => {
-    let bgrp = req.body.bgrp
-    socketServer.emit("request", bgrp)
-    res.sendStatus(200)
-})
-
-//to store volunteer location
-app.post("/storeLocation", async (req, res) => {
-    let { mob, latitude, longitude } = req.body
-    const location = new Location({
-        mobile: mob,
-        location: {
-            latitude: latitude,
-            longitude: longitude
-        }
-    })
-    let checkLocation = await Location.findOne({ mobile: mob })
-    if (checkLocation) {
-        await Location.updateOne({ mobile: mob }, {
-            location: {
-                latitude: latitude,
-                longitude: longitude
-            }
-        })
-    } else {
-        await location.save()
-            .then(() => {
-                res.sendStatus(200)
-            })
-            .catch((error) => {
-                res.status(500).json({ message: error.message })
-            })
+        res.send(500).json({message:error.message})
     }
 })
 
