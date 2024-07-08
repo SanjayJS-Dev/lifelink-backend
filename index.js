@@ -8,13 +8,19 @@ const Locality = require('./models/Localities')
 const Volunteer = require('./models/Volunteers')
 const Institution = require('./models/Institution')
 const http = require('http')
-const socket = require('socket.io')
+const { Server } = require('socket.io')
 const Location = require('./models/Location')
 const port = process.env.PORT || 3000
 
 const app = express()
 const server = http.createServer(app)
-const socketServer = socket(server)
+const socketServer = new Server({
+    cors: {
+        origin: '*',
+        methods: ['GET', 'POST'],
+        allowedHeaders: ['Content-Type'],
+    }
+})
 
 app.use(express.json())
 app.use(cors())
@@ -204,7 +210,7 @@ app.post('/getDonorList', verifyToken, async (req, res) => {
     let bgrp = req.body.bgrp
     try {
         let volunteers = await Volunteer.find({ bgrp: bgrp })
-        if(volunteers.length > 0) {
+        if (volunteers.length > 0) {
             res.send(200).json(volunteers)
         } else {
             res.sendStatus(204)
