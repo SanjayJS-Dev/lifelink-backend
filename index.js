@@ -15,7 +15,7 @@ const port = process.env.PORT || 3000
 const app = express()
 app.use(express.json())
 app.use(cors({
-    origin:"http://localhost:5173",
+    origin: process.env.FRONT_END_SERVER,
     methods: ['GET','POST','PATCH','DELETE'],
     credentials: true
 }))
@@ -23,15 +23,15 @@ app.use(cors({
 const server = http.createServer(app)
 const socketServer = socket(server,{
     cors: {
-        origin: "http://localhost:5173",
+        origin: process.env.FRONT_END_SERVER,
         methods: ['GET','POST','PATCH','DELETE'],
         credentials: true
     }
 })
 
 socketServer.on('connection', (socket) => {
-    socket.on("location",(data)=>{
-        socket.emit("sendLocation",data)
+    socketServer.on("location", (data)=>{
+        socketServer.emit("sendLocation",data)
     })
 })
 
