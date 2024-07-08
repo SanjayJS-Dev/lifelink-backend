@@ -31,7 +31,7 @@ const socketServer = socket(server,{
 
 socketServer.on('connection', (socket) => {
     socket.on("location",(data)=>{
-        socket.emit("location",data)
+        socket.emit("sendLocation",data)
     })
 })
 
