@@ -35,6 +35,10 @@ socketServer.on('connection', (socket) => {
         socket.broadcast.emit("checkBgrp",data)
     })
 
+    socket.on("location", (data) => {
+        socket.broadcast.emit("receivedLocation",data)
+    })
+
 })
 
 //middleware for authentication using jwt
