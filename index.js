@@ -21,7 +21,13 @@ app.use(cors({
 }))
 
 const server = http.createServer(app)
-const socketServer = socket(server)
+const socketServer = socket(server,{
+    cors: {
+        origin: "http://localhost:5173",
+        methods: ['GET','POST'],
+        credentials: true
+    }
+})
 
 socketServer.on('connection', (socket) => {
 
