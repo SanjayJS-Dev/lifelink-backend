@@ -13,17 +13,11 @@ const Location = require('./models/Location')
 const port = process.env.PORT || 3000
 
 const app = express()
-const server = http.createServer(app)
-const socketServer = new Server({
-    cors: {
-        origin: '*',
-        methods: ['GET', 'POST'],
-        allowedHeaders: ['Content-Type'],
-    }
-})
-
 app.use(express.json())
 app.use(cors())
+
+const server = http.createServer(app)
+const socketServer = new Server(server)
 
 socketServer.on('connection', (socket) => {
 
