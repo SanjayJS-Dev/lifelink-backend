@@ -30,9 +30,11 @@ const socketServer = socket(server,{
 })
 
 socketServer.on('connection', (socket) => {
-    socketServer.on("location", (data)=>{
-        socketServer.emit("sendLocation",data)
+
+    socket.on("request", (data) => {
+        socket.broadcast.emit("checkBgrp",data)
     })
+
 })
 
 //middleware for authentication using jwt
