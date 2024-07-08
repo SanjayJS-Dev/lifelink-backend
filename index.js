@@ -8,7 +8,7 @@ const Locality = require('./models/Localities')
 const Volunteer = require('./models/Volunteers')
 const Institution = require('./models/Institution')
 const http = require('http')
-const { Server } = require('socket.io')
+const socket = require('socket.io')
 const Location = require('./models/Location')
 const port = process.env.PORT || 3000
 
@@ -17,7 +17,7 @@ app.use(express.json())
 app.use(cors())
 
 const server = http.createServer(app)
-const socketServer = new Server(server)
+const socketServer = socket(server)
 
 socketServer.on('connection', (socket) => {
 
