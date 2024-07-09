@@ -14,11 +14,7 @@ const port = process.env.PORT || 3000
 
 const app = express()
 app.use(express.json())
-app.use(cors({
-    origin: process.env.FRONT_END_SERVER,
-    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-    credentials: true
-}))
+app.use(cors())
 
 const server = http.createServer(app)
 const socketServer = socket(server, {
