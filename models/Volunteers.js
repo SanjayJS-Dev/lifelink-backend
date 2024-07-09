@@ -9,7 +9,7 @@ const VolunteerSchema = new mongoose.Schema({
     address:String,
     password:String,
     verfied:Boolean,
-    last:Date
+    last:String
 })
 const Volunteer = mongoose.model('Volunteer',VolunteerSchema)
 module.exports = Volunteer

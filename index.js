@@ -9,7 +9,7 @@ const Volunteer = require('./models/Volunteers')
 const Institution = require('./models/Institution')
 const http = require('http')
 const socket = require('socket.io')
-const Location = require('./models/Location')
+const { formatDate } = require('./utils/formatDate')
 const port = process.env.PORT || 3000
 
 const app = express()
@@ -99,7 +99,7 @@ app.post('/addVolunteer', async (req, res) => {
         address: address,
         password: hash,
         verfied: false,
-        last: new Date()
+        last: formatDate(new Date())
     })
     await volunteer.save()
         .then(() => res.status(200).json({ message: "Volunteer Registration Successfull" }))
