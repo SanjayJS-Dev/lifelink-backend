@@ -7,14 +7,18 @@ const jwt = require('jsonwebtoken')
 const Locality = require('./models/Localities')
 const Volunteer = require('./models/Volunteers')
 const Institution = require('./models/Institution')
+const formatDate = require('./utils/formatDate')
 const http = require('http')
 const socket = require('socket.io')
-const { formatDate } = require('./utils/formatDate')
 const port = process.env.PORT || 3000
 
 const app = express()
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+    origin: process.env.FRONT_END_SERVER,
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    credentials: true
+}))
 
 const server = http.createServer(app)
 const socketServer = socket(server, {
